@@ -1,14 +1,13 @@
-#include <Pixy2.h>
-
 #include "Config.hpp"
 #include "PIDController.hpp"
 #include "SteeringController.hpp"
 #include "DriveController.hpp"
 #include "BluetoothHandler.hpp"
 #include "TelemetryLogger.hpp"
+#include "PixyCamSensor.hpp"
 
 // ── Module instances ──────────────────────────────────────────────────────────
-Pixy2             pixy;
+PixyCamSensor     pixy;
 PIDController     pid(PID_KP_DEFAULT, PID_KI_DEFAULT, PID_KD_DEFAULT);
 SteeringController steering(PIN_SERVO_DIR, SERVO_CENTER,
                              SERVO_LEFT_MAX, SERVO_RIGHT_MAX, pid);
@@ -38,8 +37,7 @@ void setup() {
     steering.begin();
     drive.begin();
 
-    pixy.init();
-    pixy.changeProg("color_connected_components");
+    pixy.begin();
 
     prevSteerMs = millis();
 }
@@ -50,19 +48,16 @@ void loop() {
     bluetooth.poll();
     telemetry.poll(now);
 
-    pixy.ccc.getBlocks();
-    const bool targetVisible = (pixy.ccc.blocks[0].m_x != 0);
+    pixy.update();
 
-    if (!targetVisible) {
+    if (!pixy.isTargetVisible()) {
         drive.stop();
         return;
     }
 
     // Pixel offsets relative to frame centre
-    const int32_t xOffset = static_cast<int32_t>(pixy.frameWidth  / 2)
-                          - static_cast<int32_t>(pixy.ccc.blocks[0].m_x);
-    const int32_t yOffset = static_cast<int32_t>(pixy.ccc.blocks[0].m_y)
-                          - static_cast<int32_t>(pixy.frameHeight / 2);
+    const int32_t xOffset = pixy.getFrameWidth()  / 2 - pixy.getTargetX();
+    const int32_t yOffset = pixy.getTargetY() - pixy.getFrameHeight() / 2;
 
     if (isOutOfBounds(xOffset, yOffset)) {
         drive.stop();
