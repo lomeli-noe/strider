@@ -2,6 +2,10 @@
 
 Arduino-based autonomous RC car that uses a **Pixy2 camera** to track a coloured target, steer toward it with a PID controller, and modulate speed based on the target's vertical position in the frame.
 
+## Demo
+
+[![Strider demo](https://img.youtube.com/vi/Zs_GEvU0X8I/0.jpg)](https://youtu.be/Zs_GEvU0X8I)
+
 ---
 
 ## Project structure
