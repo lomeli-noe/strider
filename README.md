@@ -4,7 +4,7 @@ Arduino-based autonomous RC car that uses a **Pixy2 camera** to track a coloured
 
 ## Demo
 
-[![Strider demo](https://img.youtube.com/vi/Zs_GEvU0X8I/hqdefault.jpg)](https://youtu.be/Zs_GEvU0X8I)
+[![Strider demo](https://img.youtube.com/vi/o-yQknRDKSY/hqdefault.jpg)](https://youtu.be/o-yQknRDKSY)
 
 ---
 
